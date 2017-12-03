@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<!--ToDo:
+Changes:
+-New imgUpload js for uploading files to server
+-Uploaded file transfer plugin
+-Created firebase ref
+
+CHECKOUT KRIS'S YEARBOOK APP (nothing in zip?)
+
+    -Add Various CSS and JS files
+    -Add Wifi plugin for plugin
+    -Make Img unlock upload button
+    -Code following JS functions:
+        -goToDownloads()
+        -goToUploads()
+        -goToHome()
+        -downloadImage()
+        -uploadImage()
+        -selectImage()
+    -Code buttons
+    -Code
+        -uploadList HTML class
+        -downloadList HTML class
+    -Insert cloud.png vector img
+
+    -Imsert File explorer plugin
+        Look at screenshots
+    -Insert find location plugin
+-->    
+
+<!--Added plugins:
+    -Console
+    -Geolocation
+    -File Transfer
+    -Camera (includes img upload)
+        -Download Cordova img picker?
+    -Network Connectivity
+-->
+
+<!--Server:
+    -Firebase (At Bottom)
+    -Follow directions after uploading image
+-->
+
+<html>
+<head>
+    <!--
+    Customize this policy to fit your own app's needs. For more guidance, see:
+        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+    Some notes:
+        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+            * Enable inline JS: add 'unsafe-inline' to default-src
+    -->
+    <!--
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *">
+    -->
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
+
+<!--CSS-->
+    <!--general styling (includes capitalize function)-->
+    <link rel="stylesheet" href="css/general.css">
+    <!--jquery styling-->
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" href="css/jquery.mobile-1.4.5.min.css"> 
+    <!--Launch Screen CSS
+    <link rel="stylesheet" type="text/css" href="css/launch.css">
+    <!--Download selection page CSS
+    <link rel="stylesheet" type="text/css" href="css/downloadPick.css">
+    <!--Download confirmation page CSS
+    <link rel="stylesheet" type="text/css" href="css/downloadConf.css">
+    <!--Upload confirmation page CSS
+    <link rel="stylesheet" type="text/css" href="css/upload.css">
+    -->
+
+
+
+    <title>LocaShare</title>
+</head>
+
+
+<body>
+
+    <div id="container">
+
+    <!--First (launch) Page-->
+        <div data-role="page" id="home">        
+
+            <!--Top of page (header)-->                                       
+            <div data-role="header" class="head">
+              <!--Small Description-->  
+              <p style="text-align: center"><span id="capitalize">L<span>ightning 
+                <span id="capitalize">F</span>ast <span id="capitalize">L</span>ocalized <span id="capitalize">S</span>haring</p>
+              <!--LocaShare title-->
+              <h1><span id="capitalize">L</span>oca<span id="capitalize">S</span>hare</h1>
+            </div>
+
+            <!--Cloud vector image-->
+            <img src="img/cloud.svg" alt="Cloud">
+
+            <!--Go to Download selection page BUTTON
+            <div class="downloadButton" div align="center">
+                
+                
+            </div>
+            -->
+
+            <button id="download"><span id="capitalize">D</span>ownload <span id="capitalize">I</span>mage or <span id="capitalize">V</span>ideo</button>
+
+
+            <!--Create Horizontal Line Divider-->
+            <hr width="75%" noshade>
+
+            <!--Go to Upload Confirmation page AFTER image is selected
+            <div class="uploadButton" div align="center">
+                <!--
+                <a href="#upConfirmation" id="upButton" data-role="button" onclick="uploadImage();" >
+                    Makes button inaccessible until image is clicked
+                    <span id="capitalize">U</span>pload <span id="capitalize">I</span>mage or <span id="capitalize">V</span>ideo
+                </a>
+                
+
+                
+
+            </div>
+            -->
+
+            <button id="getPhotoSrc"><span id="capitalize">U</span>pload <span id="capitalize">I</span>mage or <span id="capitalize">V</span>ideo</button>
+
+            <img style="display:none;width:60px;height:60px;" id="smallImage" src="" />
+
+            <img style="display:none;" id="largeImage" src="" />
+            <!--Create image gallery for list upload
+            <div class="uploadList">
+                <!--filler img, replace with plugin, onclick it uploads selected image
+                <input type="image" src="img/fjords.png" name="upload" class="btTxt submit" id="saveForm" onclick="selectImage();">
+
+                <input type="image" src="img/fjords.png" name="upload" class="btTxt submit" id="saveForm" onclick="selectImage();">
+
+
+            </div>
+            -->
+
+            <!--footer
+            <div data-role="footer" class="foot">
+              <p>Imam Widodo 2016</p>
+            </div>
+            -->
+        </div>
+
+
+    <!--Second (download) Page-->
+        <div data-role="page" id="download">        
+
+            <!--Create image gallery for list upload (no header here)-->
+            <div class="uploadList">
+                <!--filler img, replace with plugin-->
+                <a href="#downConfirmation"> <input type="image" href="#downConfirmation" src="img/fjords.png" name="upload" class="btTxt submit" id="saveForm" onclick="downloadImage();"> </a>
+
+                <a href="#downConfirmation"> <input type="image" href="#downConfirmation" src="img/fjords.png" name="upload" class="btTxt submit" id="saveForm" onclick="downloadImage();"> </a>
+
+
+            </div>
+
+            <!--footer
+            <div data-role="footer" class="foot">
+              <p>Imam Widodo 2016</p>
+            </div>
+            -->
+        </div>
+
+
+    <!--Third (download confirmation) page-->
+        <div data-role="page" id="downConfirmation">        
+
+            <!--Top of page (header)-->                                       
+            <div data-role="header" class="head">
+              <!--Small Description-->  
+              <h3><span id="capitalize">N<span>ice
+                <span id="capitalize">D</span>ownload!</h3>
+            </div>
+
+            <!--Go to Home selection page BUTTON-->
+            <div class="homeButton" style="width: 50%">
+                <a href="#home" data-role="button"><span id="capitalize">B</span>ack to <span id="capitalize">H</span>ome</a>
+                
+            </div>
+
+            <!--footer
+            <div data-role="footer" class="foot">
+              <p>Imam Widodo 2016</p>
+            </div>
+            -->
+        </div>
+
+
+    <!--Four (upload confirmation) page-->
+        <div data-role="page" id="upConfirmation">        
+
+            <!--Top of page (header)-->                                       
+            <div data-role="header" class="head">
+              <!--Small Description-->  
+              <h3><span id="capitalize">T<span>hanks
+                <span id="capitalize">F</span>or <span id="capitalize">S</span>haring!</h3>
+            </div>
+
+            <!--Go to Home selection page BUTTON-->
+            <div class="homeButton" style="width: 20%">
+                <a href="#home" data-role="button"><span id="capitalize">B</span>ack to <span id="capitalize">H</span>ome</a>
+                
+            </div>
+
+            <!--footer
+            <div data-role="footer" class="foot">
+              <p>Imam Widodo 2016</p>
+            </div>
+            -->
+        </div>
+
+
+    <!--JS-->
+    <!--Jquery JS-->
+    <script type="text/javascript" src="js/jquery-2.2.4.min.js"></script> 
+    <!-- <script type="text/javascript" src="js/jquery.ui-1.11.4.min.js"></script> -->
+    <script type="text/javascript" src="js/jquery.mobile-1.4.5.min.js"></script>
+
+    <!--Check location (plugin)-->
+    <script type="text/javascript" src="js/locationServices.js"></script>
+
+    <!--Image Scroll and Selection JS Upload-->
+    <script type="text/javascript" src="js/imgUpload.js"></script> 
+
+    <!--Image Scroll and Selection JS for Download-->
+    <script type="text/javascript" src="js/imgDownload.js"></script>
+
+    <!--Buttons (controls the functions of the: doenload, upload, and back to home buttons)-->
+    <script type="text/javascript" src="js/buttons.js"></script> 
+    
+    <!--Image Functions-->
+    <script type="text/javascript" src="js/imageFunctions.js"></script> 
+
+    <!--Firebase server-->
+        <script src="js/firebase.js"></script>
+        <script>
+          // Initialize Firebase
+          var config = {
+            apiKey: "AIzaSyDQQV3kuxvkssnjfKq-h_UPgH38cikWm8A",
+            authDomain: "locashare-de548.firebaseapp.com",
+            databaseURL: "https://locashare-de548.firebaseio.com",
+            storageBucket: "locashare-de548.appspot.com",
+          };
+          firebase.initializeApp(config);
+          
+        var storage = firebase.storage();
+        </script>
+
+    </div>
+</body>
+</html>

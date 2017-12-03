@@ -1,0 +1,47 @@
+
+#delta{
+	text-transform: lowercase; 
+	/* color: black; */
+}
+
+.ui-content{
+	text-transform: lowercase;
+	/*responsive font sizes*/
+	font-size: 2.5vmin;
+}
+
+#capitalize{
+	text-transform: capitalize;
+}
+
+#first, #last, #email{
+	color: #ff0000;
+}
+
+img{
+	display: block;
+	width: 40%;
+	max-width: 700px; 
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.foot{
+	text-align: left;
+	text-transform: lowercase;
+	font-size: 0.8em;
+}
+
+.foot p{
+	margin-left: 5px;
+}
+
+.head{
+	font-size: 3vmin;
+}
+
+h2{
+	font-size: 1.2em;
+	text-align: center;
+}
